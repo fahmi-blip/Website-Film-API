@@ -710,129 +710,111 @@
       }
     </style>
   </head>
-  <body>
-    <div class="container">
-      <header>
-        <h1>🎬 CineStream</h1>
-        <p>Jelajahi Dunia Sinema Modern</p>
-      </header>
-
-      <div class="search-section">
-        <input
-          type="text"
-          id="searchInput"
-          class="search-input"
-          placeholder="Cari film favorit Anda..."
-        />
-        <button class="btn-search" onclick="searchMovies()">🔍 Cari</button>
+ <body>
+ 
+    <!-- NAVBAR -->
+    <nav id="navbar">
+      <div class="nav-logo">🎬 CineStream</div>
+      <div class="nav-right">
+        <div class="nav-search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Cari film..." />
+        </div>
+        <button class="nav-search-btn" onclick="searchMovies()">Cari</button>
       </div>
-
-      <div class="category-buttons">
-        <button class="category-btn active" onclick="getPopularMovies()">
-          🔥 Popular
-        </button>
-        <button class="category-btn" onclick="getTopRatedMovies()">
-          ⭐ Top Rated
-        </button>
-        <button class="category-btn" onclick="getUpcomingMovies()">
-          📅 Upcoming
-        </button>
-        <button class="category-btn" onclick="getNowPlayingMovies()">
-          🎭 Now Playing
-        </button>
-      </div>
-
-      <div id="errorMessage"></div>
-      <div id="loading" class="loading" style="display: none">
-        <div class="spinner"></div>
-        <p>Memuat film-film terbaik...</p>
-      </div>
-      <div id="moviesContainer" class="movies-grid"></div>
-      <div id="noResults" class="no-results" style="display: none">
-        Tidak ada film yang ditemukan 😢
-      </div>
-
-      <div class="pagination">
-        <button id="prevBtn" onclick="previousPage()" disabled>
-          ← Sebelumnya
-        </button>
-        <span class="page-info" id="pageInfo"></span>
-        <button id="nextBtn" onclick="nextPage()">Selanjutnya →</button>
+    </nav>
+ 
+    <!-- HERO -->
+    <div class="hero" id="hero">
+      <div class="hero-bg" id="heroBg"></div>
+      <div class="hero-content" id="heroContent">
+        <div class="hero-badge">🔥 Trending Now</div>
+        <h1 class="hero-title" id="heroTitle">Memuat Film...</h1>
+        <div class="hero-meta">
+          <span class="hero-rating" id="heroRating">⭐ 0.0</span>
+          <div class="hero-dot"></div>
+          <span id="heroYear">—</span>
+          <div class="hero-dot"></div>
+          <span id="heroLang">—</span>
+        </div>
+        <p class="hero-desc" id="heroDesc">Memuat konten terbaik untuk Anda...</p>
+        <div class="hero-actions">
+          <button class="btn-hero-primary" id="heroDetailBtn">▶ Lihat Detail</button>
+          <button class="btn-hero-secondary">+ Watchlist</button>
+        </div>
       </div>
     </div>
-
-    <!-- MODAL POPUP -->
-    <div id="movieModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <img id="modalBackdrop" class="modal-backdrop" src="" alt="" />
-          <img id="modalPoster" class="modal-poster" src="" alt="" />
-          <span class="modal-close" onclick="closeModal()">&times;</span>
+ 
+    <!-- CATEGORY TABS -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" data-fn="getPopularMovies">🔥 Popular</button>
+      <button class="tab-btn" data-fn="getTopRatedMovies">⭐ Top Rated</button>
+      <button class="tab-btn" data-fn="getUpcomingMovies">📅 Upcoming</button>
+      <button class="tab-btn" data-fn="getNowPlayingMovies">🎭 Now Playing</button>
+    </div>
+ 
+    <!-- MAIN -->
+    <div class="main">
+      <div class="status-bar" id="statusBar"></div>
+ 
+      <div class="section-header">
+        <h2 class="section-title" id="sectionTitle">Film Popular</h2>
+        <span class="section-count" id="sectionCount"></span>
+      </div>
+ 
+      <div id="moviesContainer" class="movies-grid"></div>
+      <div id="loadingGrid" class="loading-grid" style="display:none;"></div>
+      <div id="noResults" class="no-results" style="display:none;">
+        <div class="no-results-icon">🎬</div>
+        <h3>Film tidak ditemukan</h3>
+        <p>Coba kata kunci yang berbeda</p>
+      </div>
+ 
+      <div class="pagination">
+        <button class="page-btn" id="prevBtn" onclick="previousPage()" disabled>← Prev</button>
+        <div class="page-info" id="pageInfo">Halaman <span>1</span> / <span>1</span></div>
+        <button class="page-btn" id="nextBtn" onclick="nextPage()">Next →</button>
+      </div>
+    </div>
+ 
+    <!-- MODAL -->
+    <div class="modal-overlay" id="movieModal">
+      <div class="modal-box">
+        <button class="modal-close-btn" onclick="closeModal()">✕</button>
+        <div class="modal-hero">
+          <img id="modalBackdrop" src="" alt="" />
         </div>
         <div class="modal-body">
-          <h2 id="modalTitle" class="modal-title"></h2>
-
-          <div class="modal-meta">
-            <div class="meta-item">
-              <span class="meta-label">Tahun:</span>
-              <span class="meta-value" id="modalYear"></span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Status:</span>
-              <span class="meta-value" id="modalStatus"></span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Bahasa:</span>
-              <span class="meta-value" id="modalLanguage"></span>
-            </div>
+          <div class="modal-poster-wrap">
+            <img id="modalPoster" src="" alt="" />
           </div>
-
-          <div class="modal-rating">
-            <div class="rating-stars" id="modalStars"></div>
-            <span class="rating-text" id="modalRating"></span>
-          </div>
-
-          <div class="modal-description" id="modalDescription"></div>
-
-          <div class="modal-details">
-            <div class="detail-item">
-              <div class="detail-label">🎯 Rating</div>
-              <div class="detail-value" id="detailRating"></div>
+          <div class="modal-info">
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-pills" id="modalPills"></div>
+            <div class="modal-rating-row">
+              <span class="stars-display" id="modalStars"></span>
+              <span class="rating-num" id="modalRatingNum"></span>
+              <span class="vote-count" id="modalVoteCount"></span>
             </div>
-            <div class="detail-item">
-              <div class="detail-label">📊 Popularitas</div>
-              <div class="detail-value" id="detailPopularity"></div>
+            <p class="modal-desc" id="modalDesc"></p>
+            <div class="modal-stats">
+              <div class="stat-box">
+                <div class="stat-label">Budget</div>
+                <div class="stat-value" id="statBudget">—</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Revenue</div>
+                <div class="stat-value" id="statRevenue">—</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Durasi</div>
+                <div class="stat-value" id="statRuntime">—</div>
+              </div>
             </div>
-            <div class="detail-item">
-              <div class="detail-label">👁️ Votes</div>
-              <div class="detail-value" id="detailVotes"></div>
+            <div class="modal-cta">
+              <button class="btn-modal-primary">▶ Trailer</button>
+              <button class="btn-modal-secondary">❤ Simpan</button>
             </div>
-            <div class="detail-item">
-              <div class="detail-label">💰 Budget</div>
-              <div class="detail-value" id="detailBudget"></div>
-            </div>
-            <div class="detail-item">
-              <div class="detail-label">💵 Revenue</div>
-              <div class="detail-value" id="detailRevenue"></div>
-            </div>
-            <div class="detail-item">
-              <div class="detail-label">⏱️ Durasi</div>
-              <div class="detail-value" id="detailRuntime"></div>
-            </div>
-          </div>
-
-          <div class="modal-buttons">
-            <button class="btn-watch">▶️ Trailer</button>
-            <button
-              class="btn-watch"
-              style="
-                background: rgba(255, 255, 255, 0.1);
-                color: #feca57;
-                border: 2px solid #feca57;
-              "
-            >
-              ❤️ Simpan
-            </button>
           </div>
         </div>
       </div>
@@ -843,325 +825,245 @@
       const BASE_URL = "https://api.themoviedb.org/3";
       const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
 
-      let currentPage = 1;
+       let currentPage = 1;
       let currentQuery = "";
       let isSearching = false;
-      let currentMovieData = null;
-
-      document
-        .getElementById("searchInput")
-        .addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            searchMovies();
-          }
+      let currentEndpoint = "/movie/popular";
+      let heroMovie = null;
+ 
+      // ===== NAV SCROLL =====
+      window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+      });
+ 
+      // ===== SEARCH =====
+      document.getElementById("searchInput").addEventListener("keypress", e => {
+        if (e.key === "Enter") searchMovies();
+      });
+ 
+      function searchMovies() {
+        const q = document.getElementById("searchInput").value.trim();
+        if (!q) return showStatus("Masukkan nama film untuk dicari", "error");
+        currentQuery = q;
+        isSearching = true;
+        currentPage = 1;
+        updateSectionTitle("Hasil: "" + q + """);
+        fetchMovies(`/search/movie?query=${encodeURIComponent(q)}`);
+      }
+ 
+      // ===== TABS =====
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          isSearching = false;
+          currentPage = 1;
+          currentQuery = "";
+          document.getElementById("searchInput").value = "";
+          const fn = btn.dataset.fn;
+          const map = {
+            getPopularMovies: ["/movie/popular", "Film Popular"],
+            getTopRatedMovies: ["/movie/top_rated", "Top Rated"],
+            getUpcomingMovies: ["/movie/upcoming", "Upcoming"],
+            getNowPlayingMovies: ["/movie/now_playing", "Now Playing"],
+          };
+          currentEndpoint = map[fn][0];
+          updateSectionTitle(map[fn][1]);
+          fetchMovies(currentEndpoint);
         });
-
+      });
+ 
+      function updateSectionTitle(t) {
+        document.getElementById("sectionTitle").textContent = t;
+      }
+ 
+      // ===== FETCH =====
       async function fetchMovies(endpoint) {
+        showLoading(true);
+        clearStatus();
         try {
-          showLoading(true);
-          hideError();
-
-          const separator = endpoint.includes("?") ? "&" : "?";
-          const url = `${BASE_URL}${endpoint}${separator}api_key=${API_KEY}&page=${currentPage}`;
-
-          const response = await fetch(url);
-
-          if (!response.ok) {
-            if (response.status === 401) {
-              throw new Error(
-                "API Key tidak valid. Silakan cek kembali API key Anda.",
-              );
-            } else if (response.status === 404) {
-              throw new Error("Data tidak ditemukan");
-            } else {
-              throw new Error(`Error: ${response.status}`);
-            }
+          const sep = endpoint.includes("?") ? "&" : "?";
+          const url = `${BASE}${endpoint}${sep}api_key=${API_KEY}&page=${currentPage}`;
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(res.status === 401 ? "API Key tidak valid" : `Error ${res.status}`);
+          const data = await res.json();
+          renderMovies(data.results);
+          updatePagination(data.total_pages);
+          if (data.results.length > 0 && !isSearching && currentPage === 1) {
+            updateHero(data.results[Math.floor(Math.random() * Math.min(5, data.results.length))]);
           }
-
-          const data = await response.json();
-          displayMovies(data.results);
-          updatePageInfo(data.total_pages);
-        } catch (error) {
-          showError(error.message);
-          console.error("Error:", error);
+          document.getElementById("sectionCount").textContent = data.total_results ? `${data.total_results.toLocaleString()} film` : "";
+        } catch (err) {
+          showStatus(err.message, "error");
         } finally {
           showLoading(false);
         }
       }
-
-      function searchMovies() {
-        const query = document.getElementById("searchInput").value.trim();
-
-        if (query === "") {
-          showError("Silakan masukkan nama film");
-          return;
+ 
+      // ===== HERO =====
+      function updateHero(movie) {
+        heroMovie = movie;
+        const bp = movie.backdrop_path ? `${IMG}/original${movie.backdrop_path}` : "";
+        const heroBg = document.getElementById("heroBg");
+        if (bp) {
+          heroBg.style.backgroundImage = `url(${bp})`;
+          heroBg.style.opacity = "1";
         }
-
-        currentQuery = query;
-        isSearching = true;
-        currentPage = 1;
-        document.getElementById("searchInput").value = query;
-
-        fetchMovies(`/search/movie?query=${encodeURIComponent(query)}`);
+        document.getElementById("heroTitle").textContent = movie.title;
+        document.getElementById("heroRating").textContent = `⭐ ${movie.vote_average?.toFixed(1)}`;
+        document.getElementById("heroYear").textContent = movie.release_date ? new Date(movie.release_date).getFullYear() : "—";
+        document.getElementById("heroLang").textContent = movie.original_language?.toUpperCase();
+        document.getElementById("heroDesc").textContent = movie.overview || "Tidak ada deskripsi.";
+        document.getElementById("heroDetailBtn").onclick = () => getMovieDetails(movie.id);
       }
-
-      function getPopularMovies() {
-        resetSearch();
-        isSearching = false;
-        fetchMovies("/movie/popular");
-        updateActiveButton(event.target);
-      }
-
-      function getTopRatedMovies() {
-        resetSearch();
-        isSearching = false;
-        fetchMovies("/movie/top_rated");
-        updateActiveButton(event.target);
-      }
-
-      function getUpcomingMovies() {
-        resetSearch();
-        isSearching = false;
-        fetchMovies("/movie/upcoming");
-        updateActiveButton(event.target);
-      }
-
-      function getNowPlayingMovies() {
-        resetSearch();
-        isSearching = false;
-        fetchMovies("/movie/now_playing");
-        updateActiveButton(event.target);
-      }
-
-      function resetSearch() {
-        currentPage = 1;
-        currentQuery = "";
-        document.getElementById("searchInput").value = "";
-      }
-
-      function displayMovies(movies) {
+ 
+      // ===== RENDER MOVIES =====
+      function renderMovies(movies) {
         const container = document.getElementById("moviesContainer");
+        const noResults = document.getElementById("noResults");
         container.innerHTML = "";
-
         if (movies.length === 0) {
-          document.getElementById("noResults").style.display = "block";
-          document.getElementById("moviesContainer").style.display = "none";
+          container.style.display = "none";
+          noResults.style.display = "block";
           return;
         }
-
-        document.getElementById("noResults").style.display = "none";
-        document.getElementById("moviesContainer").style.display = "grid";
-
-        movies.forEach((movie) => {
-          const posterPath = movie.poster_path
-            ? IMAGE_BASE_URL + "/w500" + movie.poster_path
-            : "https://via.placeholder.com/500x750?text=No+Image";
-
-          const releaseYear = movie.release_date
-            ? new Date(movie.release_date).getFullYear()
-            : "N/A";
-          const rating = movie.vote_average
-            ? movie.vote_average.toFixed(1)
-            : "N/A";
-
-          const movieCard = document.createElement("div");
-          movieCard.className = "movie-card";
-          movieCard.innerHTML = `
-            <img src="${posterPath}" alt="${movie.title}" class="movie-poster">
-            <div class="movie-info">
-              <div class="movie-title">${movie.title}</div>
-              <div class="movie-year">${releaseYear}</div>
-              <div class="movie-rating">
-                <span class="star">⭐</span>
-                <span class="rating-value">${rating}</span>
-                <span class="rating-max">/10</span>
+        container.style.display = "grid";
+        noResults.style.display = "none";
+ 
+        movies.forEach((movie, i) => {
+          const poster = movie.poster_path ? `${IMG}/w500${movie.poster_path}` : "https://via.placeholder.com/500x750/1a1a1a/555?text=No+Image";
+          const year = movie.release_date ? new Date(movie.release_date).getFullYear() : "—";
+          const rating = movie.vote_average ? movie.vote_average.toFixed(1) : "—";
+          const isTop = i < 3;
+ 
+          const card = document.createElement("div");
+          card.className = "movie-card";
+          card.style.animationDelay = `${i * 0.03}s`;
+          card.innerHTML = `
+            ${isTop ? `<div class="card-badge">TOP ${i + 1}</div>` : ""}
+            <img src="${poster}" alt="${movie.title}" loading="lazy" />
+            <div class="movie-card-overlay">
+              <div class="card-title">${movie.title}</div>
+              <div class="card-meta">
+                <span class="card-rating">⭐ ${rating}</span>
+                <span>${year}</span>
               </div>
-              <div class="movie-overview">${
-                movie.overview || "Tidak ada deskripsi"
-              }</div>
-              <button class="view-btn" onclick="openModal(event)">Lihat Detail</button>
+              <div class="card-actions">
+                <button class="card-btn card-btn-primary" onclick="event.stopPropagation(); getMovieDetails(${movie.id})">Detail</button>
+                <button class="card-btn card-btn-secondary" onclick="event.stopPropagation()">+ List</button>
+              </div>
             </div>
           `;
-
-          // Store movie data untuk modal
-          movieCard.dataset.movieId = movie.id;
-          movieCard.addEventListener("click", function (e) {
-            if (!e.target.classList.contains("view-btn")) {
-              openModal(e, movie);
-            }
-          });
-
-          const btn = movieCard.querySelector(".view-btn");
-          if (btn) {
-            btn.addEventListener("click", (e) => {
-              e.stopPropagation();
-              openModal(e, movie);
-            });
-          }
-
-          container.appendChild(movieCard);
-        });
-
-        // Add click to all cards
-        document.querySelectorAll(".movie-card").forEach((card) => {
-          card.addEventListener("click", function (e) {
-            if (!e.target.classList.contains("view-btn")) {
-              const id = this.dataset.movieId;
-              getMovieDetails(id);
-            }
-          });
+          card.addEventListener("click", () => getMovieDetails(movie.id));
+          container.appendChild(card);
         });
       }
-
-      async function getMovieDetails(movieId) {
+ 
+      // ===== MOVIE DETAIL =====
+      async function getMovieDetails(id) {
         try {
-          const response = await fetch(
-            `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`,
-          );
-          const data = await response.json();
-          displayMovieModal(data);
-        } catch (error) {
-          console.error("Error fetching details:", error);
+          const res = await fetch(`${BASE}/movie/${id}?api_key=${API_KEY}`);
+          const data = await res.json();
+          showModal(data);
+        } catch (e) {
+          showStatus("Gagal memuat detail film", "error");
         }
       }
-
-      function displayMovieModal(movie) {
-        // Set poster dan backdrop
-        const posterPath = movie.poster_path
-          ? IMAGE_BASE_URL + "/w500" + movie.poster_path
-          : "https://via.placeholder.com/500x750?text=No+Image";
-
-        const backdropPath = movie.backdrop_path
-          ? IMAGE_BASE_URL + "/original" + movie.backdrop_path
-          : "https://via.placeholder.com/1280x720?text=No+Image";
-
-        document.getElementById("modalPoster").src = posterPath;
-        document.getElementById("modalBackdrop").src = backdropPath;
+ 
+      function showModal(movie) {
+        const poster = movie.poster_path ? `${IMG}/w500${movie.poster_path}` : "https://via.placeholder.com/500x750/1a1a1a/555?text=No+Image";
+        const backdrop = movie.backdrop_path ? `${IMG}/original${movie.backdrop_path}` : poster;
+ 
+        document.getElementById("modalBackdrop").src = backdrop;
+        document.getElementById("modalPoster").src = poster;
         document.getElementById("modalTitle").textContent = movie.title;
-        document.getElementById("modalYear").textContent = new Date(
-          movie.release_date,
-        ).getFullYear();
-        document.getElementById("modalStatus").textContent =
-          movie.status || "Released";
-        document.getElementById("modalLanguage").textContent =
-          movie.original_language.toUpperCase();
-
-        // Rating stars
+        document.getElementById("modalDesc").textContent = movie.overview || "Tidak ada deskripsi.";
+ 
+        // Stars
         const stars = Math.round(movie.vote_average / 2);
-        let starsHTML = "";
-        for (let i = 0; i < 5; i++) {
-          starsHTML += i < stars ? "⭐" : "☆";
-        }
-        document.getElementById("modalStars").innerHTML = starsHTML;
-        document.getElementById("modalRating").textContent =
-          movie.vote_average.toFixed(1) + "/10";
-
-        document.getElementById("modalDescription").textContent =
-          movie.overview || "Tidak ada deskripsi";
-
-        // Details
-        document.getElementById("detailRating").textContent =
-          movie.vote_average.toFixed(1) + "/10";
-        document.getElementById("detailPopularity").textContent =
-          movie.popularity.toFixed(0);
-        document.getElementById("detailVotes").textContent = movie.vote_count;
-        document.getElementById("detailBudget").textContent =
-          movie.budget > 0
-            ? "$" + movie.budget.toLocaleString()
-            : "Tidak ada data";
-        document.getElementById("detailRevenue").textContent =
-          movie.revenue > 0
-            ? "$" + movie.revenue.toLocaleString()
-            : "Tidak ada data";
-        document.getElementById("detailRuntime").textContent =
-          movie.runtime + " menit";
-
-        // Open modal
+        document.getElementById("modalStars").textContent = "★".repeat(stars) + "☆".repeat(5 - stars);
+        document.getElementById("modalRatingNum").textContent = movie.vote_average?.toFixed(1) + "/10";
+        document.getElementById("modalVoteCount").textContent = `(${movie.vote_count?.toLocaleString()} votes)`;
+ 
+        // Pills
+        const pills = document.getElementById("modalPills");
+        pills.innerHTML = "";
+        if (movie.release_date) pills.innerHTML += `<span class="pill pill-gray">${new Date(movie.release_date).getFullYear()}</span>`;
+        if (movie.status) pills.innerHTML += `<span class="pill pill-red">${movie.status}</span>`;
+        if (movie.original_language) pills.innerHTML += `<span class="pill pill-gray">${movie.original_language.toUpperCase()}</span>`;
+        if (movie.vote_average) pills.innerHTML += `<span class="pill pill-gold">⭐ ${movie.vote_average.toFixed(1)}</span>`;
+ 
+        // Stats
+        document.getElementById("statBudget").textContent = movie.budget > 0 ? "$" + (movie.budget / 1e6).toFixed(0) + "M" : "—";
+        document.getElementById("statRevenue").textContent = movie.revenue > 0 ? "$" + (movie.revenue / 1e6).toFixed(0) + "M" : "—";
+        document.getElementById("statRuntime").textContent = movie.runtime ? movie.runtime + " min" : "—";
+ 
         document.getElementById("movieModal").classList.add("show");
+        document.body.style.overflow = "hidden";
       }
-
-      function openModal(e, movie = null) {
-        e?.stopPropagation?.();
-        if (movie) {
-          displayMovieModal(movie);
-        }
-      }
-
+ 
       function closeModal() {
         document.getElementById("movieModal").classList.remove("show");
+        document.body.style.overflow = "";
       }
-
-      // Close modal when clicking outside
-      window.addEventListener("click", function (event) {
-        const modal = document.getElementById("movieModal");
-        if (event.target == modal) {
-          closeModal();
-        }
+ 
+      document.getElementById("movieModal").addEventListener("click", e => {
+        if (e.target === document.getElementById("movieModal")) closeModal();
       });
-
+ 
+      window.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+ 
+      // ===== LOADING =====
       function showLoading(show) {
-        document.getElementById("loading").style.display = show
-          ? "block"
-          : "none";
+        const lg = document.getElementById("loadingGrid");
+        const mg = document.getElementById("moviesContainer");
+        const nr = document.getElementById("noResults");
+        if (show) {
+          mg.style.display = "none";
+          nr.style.display = "none";
+          lg.style.display = "grid";
+          lg.innerHTML = Array.from({length: 20}, () => `<div class="skeleton"></div>`).join("");
+        } else {
+          lg.style.display = "none";
+          // display is handled by renderMovies
+        }
       }
-
-      function showError(message) {
-        const errorDiv = document.getElementById("errorMessage");
-        errorDiv.innerHTML = `<div class="error-message">${message}</div>`;
+ 
+      // ===== STATUS =====
+      function showStatus(msg, type) {
+        document.getElementById("statusBar").innerHTML = `<div class="error-pill">⚠️ ${msg}</div>`;
       }
-
-      function hideError() {
-        document.getElementById("errorMessage").innerHTML = "";
+      function clearStatus() {
+        document.getElementById("statusBar").innerHTML = "";
       }
-
-      function updatePageInfo(totalPages) {
-        document.getElementById("pageInfo").textContent =
-          `Halaman ${currentPage} / ${totalPages}`;
+ 
+      // ===== PAGINATION =====
+      function updatePagination(total) {
+        const info = document.getElementById("pageInfo");
+        info.innerHTML = `Halaman <span>${currentPage}</span> / <span>${total}</span>`;
         document.getElementById("prevBtn").disabled = currentPage === 1;
-        document.getElementById("nextBtn").disabled = currentPage >= totalPages;
+        document.getElementById("nextBtn").disabled = currentPage >= total;
       }
-
+ 
       function nextPage() {
         currentPage++;
-        window.scrollTo(0, 0);
-        if (isSearching) {
-          fetchMovies(
-            `/search/movie?query=${encodeURIComponent(currentQuery)}`,
-          );
-        } else {
-          const activeBtn = document.querySelector(".category-btn.active");
-          activeBtn.click();
-        }
+        window.scrollTo({ top: document.querySelector(".tabs-bar").offsetTop - 70, behavior: "smooth" });
+        if (isSearching) fetchMovies(`/search/movie?query=${encodeURIComponent(currentQuery)}`);
+        else fetchMovies(currentEndpoint);
       }
-
+ 
       function previousPage() {
         if (currentPage > 1) {
           currentPage--;
-          window.scrollTo(0, 0);
-          if (isSearching) {
-            fetchMovies(
-              `/search/movie?query=${encodeURIComponent(currentQuery)}`,
-            );
-          } else {
-            const activeBtn = document.querySelector(".category-btn.active");
-            activeBtn.click();
-          }
+          window.scrollTo({ top: document.querySelector(".tabs-bar").offsetTop - 70, behavior: "smooth" });
+          if (isSearching) fetchMovies(`/search/movie?query=${encodeURIComponent(currentQuery)}`);
+          else fetchMovies(currentEndpoint);
         }
       }
-
-      function updateActiveButton(button) {
-        document.querySelectorAll(".category-btn").forEach((btn) => {
-          btn.classList.remove("active");
-        });
-        button.classList.add("active");
-      }
-
-      // Load popular movies on page load
+ 
+      // ===== INIT =====
       window.addEventListener("load", () => {
-        const popularBtn = document.querySelector(
-          '.category-btn[onclick="getPopularMovies()"]',
-        );
-        popularBtn.click();
+        fetchMovies("/movie/popular");
       });
     </script>
   </body>
